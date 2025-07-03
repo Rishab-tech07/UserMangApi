@@ -32,10 +32,10 @@ public class UserController {
     }
 
 
-//    @GetMapping
-//    public List<User> getAllUsers() {
-//        return userRepository.findAll();
-//    }
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
