@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,23 +23,30 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
-
-        user.setId(null);
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    public ResponseEntity<List<User>> createUsers(@RequestBody List<User> users) {
+        users.forEach(user -> {
+            user.setId(null);      // Ensure treated as new
+            user.setVersion(null); // Avoid version issues
+        });
+        return ResponseEntity.ok(userRepository.saveAll(users));
     }
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+
+//    @GetMapping
+//    public List<User> getAllUsers() {
+//        return userRepository.findAll();
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/page")
+    public Page<User> getAllusers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @PutMapping("/{id}")
