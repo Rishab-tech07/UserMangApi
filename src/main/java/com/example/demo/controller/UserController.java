@@ -21,21 +21,15 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
     @PostMapping
     public ResponseEntity<List<User>> createUsers(@RequestBody List<User> users) {
         users.forEach(user -> {
             user.setId(null);      // Ensure treated as new
-            user.setVersion(null); // Avoid version issues
         });
         return ResponseEntity.ok(userRepository.saveAll(users));
     }
 
 
-//    @GetMapping
-//    public List<User> getAllUsers() {
-//        return userRepository.findAll();
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {

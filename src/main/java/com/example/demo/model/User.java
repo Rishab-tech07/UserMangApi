@@ -7,8 +7,6 @@ import lombok.*;
 @Entity
 @Table(name = "users")
 public class User {
-    @Version
-    private Integer version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
